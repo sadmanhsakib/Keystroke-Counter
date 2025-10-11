@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 log.csv
+.venv
 test.py
 build/
 develop-eggs/

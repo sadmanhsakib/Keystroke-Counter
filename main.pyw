@@ -4,11 +4,8 @@ import os
 import threading
 import time
 
-day_count = 0
-last_logging_date = ""
 keystroke_count = 0
 click_count = 0
-lines = []
 
 # creating a log file if it doesn't exist
 if not os.path.exists("log.csv"):
@@ -22,15 +19,13 @@ if not os.path.exists("log.csv"):
 log_file = "log.csv"
 
 def main():
-    global day_count, last_logging_date, keystroke_count, click_count, lines
+    global keystroke_count, click_count
     
     # getting the data from the last line
     with open(log_file, 'r') as file:
         lines = file.readlines()
         
         parts = lines[-1].split(',')
-        day_count = int(parts[0])
-        last_logging_date = parts[1] 
         keystroke_count = int(parts[2])
         click_count = int(parts[3])
     
@@ -70,19 +65,27 @@ def on_click(x, y, button, pressed):
 
 # logs the counts every 60 seconds
 def log():
-    global keystroke_count, click_count, last_logging_date, day_count, lines
+    global keystroke_count, click_count
     
     today_date = datetime.datetime.now().date().strftime("%Y-%m-%d")
 
-    # if the date has changed, log the counts and reset other values
+    # getting the data from the last line
+    with open(log_file, 'r') as file:
+        lines = file.readlines()
+        
+        parts = lines[-1].split(',')
+        counter = int(parts[0])
+        last_logging_date = parts[1] 
+
+    # modifying data for a new day
     if last_logging_date != today_date:
-        day_count += 1
+        counter += 1
         keystroke_count = 0
         click_count = 0
     else:
         lines.pop(-1)
     
-    lines.append(f"{day_count},{today_date},{keystroke_count},{click_count}\n")
+    lines.append(f"{counter},{today_date},{keystroke_count},{click_count}\n")
     
     # writes the data to the log file
     with open(log_file, 'w') as file:        
