@@ -13,8 +13,8 @@ if not os.path.exists("log.csv"):
     
     with open("log.csv", 'w') as file:
         # writing the initial lines
-        file.write("No,Date,Keystroke-Count,Click-Count\n")
-        file.write(f"1,{today},0,0")
+        file.write("No,Date,Keystroke-Count,Click-Count,Ratio\n")
+        file.write(f"1,{today},0,0,0.00\n")
 
 log_file = "log.csv"
 
@@ -85,7 +85,10 @@ def log():
     else:
         lines.pop(-1)
     
-    lines.append(f"{counter},{today_date},{keystroke_count},{click_count}\n")
+    try:
+        lines.append(f"{counter},{today_date},{keystroke_count},{click_count},{round(keystroke_count/click_count, 2)}\n")
+    except ZeroDivisionError:
+        lines.append(f"{counter},{today_date},{keystroke_count},{click_count},0.00\n")
     
     # writes the data to the log file
     with open(log_file, 'w') as file:        
