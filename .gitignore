@@ -10,6 +10,7 @@ __pycache__/
 .Python
 log.csv
 .venv
+.env
 test.py
 build/
 develop-eggs/
