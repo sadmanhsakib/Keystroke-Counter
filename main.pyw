@@ -2,7 +2,6 @@ from pynput import keyboard, mouse
 from database import db
 import datetime
 import threading
-import time
 import asyncio
 
 class ActiveListener:
@@ -35,8 +34,11 @@ async def main():
     # connecting to the database
     await db.connect()
     last_log = await db.get_last_log()
+    # setting the timezone to Asia/Dhaka
+    offset = datetime.timezone(datetime.timedelta(hours=6))
 
-    if last_log:
+    # checking if today is already logged
+    if last_log and last_log["date"].strftime("%Y-%m-%d") == datetime.datetime.now(offset).strftime("%Y-%m-%d"):
         # getting the data from the last line
         tracker.keystroke_count = int(last_log["keystroke_count"])
         tracker.click_count = int(last_log["click_count"])

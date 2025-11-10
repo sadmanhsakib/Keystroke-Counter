@@ -83,7 +83,7 @@ class Database:
                     LIMIT 1
                 """)
                 # returning the last log
-                return result
+                return result if result else None
         except Exception as error:
             print(f"Error at fetching last log: {error}")
             return None
