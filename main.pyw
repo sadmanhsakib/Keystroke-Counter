@@ -1,8 +1,21 @@
 from pynput import keyboard, mouse
 from database import db
-import datetime
+import config
+import datetime, os
 import threading
-import asyncio
+import asyncio, pytz
+
+cache_file = "cache.txt"
+
+# getting the date minding the timezone
+timezone = pytz.timezone(config.TIMEZONE)
+today = datetime.datetime.now(timezone).strftime("%Y-%m-%d")
+
+# creating the cache file if it doesn't exist
+if not os.path.exists(cache_file):
+    with open(cache_file, "w") as file:
+        file.write(f"{today},0,0,0.00")
+
 
 class ActiveListener:
     def __init__(self):
@@ -28,24 +41,19 @@ class ActiveListener:
             self.keystroke_count = 0
             self.click_count = 0
 
-tracker = ActiveListener()            
+
+tracker = ActiveListener()
+
 
 async def main():
-    # connecting to the database
-    await db.connect()
-    last_log = await db.get_last_log()
-    # setting the timezone to Asia/Dhaka
-    offset = datetime.timezone(datetime.timedelta(hours=6))
+    # getting the last data from the cache file
+    with open(cache_file, "r") as file:
+        lines = file.readlines()
+        parts = lines[-1].split(",")
 
-    # checking if today is already logged
-    if last_log and last_log["date"].strftime("%Y-%m-%d") == datetime.datetime.now(offset).strftime("%Y-%m-%d"):
-        # getting the data from the last line
-        tracker.keystroke_count = int(last_log["keystroke_count"])
-        tracker.click_count = int(last_log["click_count"])
-    else:
-        tracker.keystroke_count = 0
-        tracker.click_count = 0
-    
+        tracker.keystroke_count = int(parts[1])
+        tracker.click_count = int(parts[2])
+
     # threads are used to allow both listeners to run concurrently
     # using the daemon=True argument to ensure they close when the main program exits
     keyboard_thread = threading.Thread(target=keyboard_listener, daemon=True)
@@ -57,7 +65,7 @@ async def main():
 
     asyncio.create_task(periodic_log())
 
-    # keeps the program running 
+    # keeps the program running
     try:
         while True:
             await asyncio.sleep(1)
@@ -74,30 +82,49 @@ def on_key_press():
 def on_click(x, y, button, pressed):
     if pressed:
         # only counts left, right and middle clicks
-        if button == mouse.Button.left or button == mouse.Button.right or button == mouse.Button.middle:
+        if (
+            button == mouse.Button.left
+            or button == mouse.Button.right
+            or button == mouse.Button.middle
+        ):
             tracker.click_count += 1
 
 
 # runs the log function periodically
 async def periodic_log():
-    while True:    
+    while True:
         # log_activity() function is called every 10 seconds
-        await asyncio.sleep(10)
+        await asyncio.sleep(2)
         await log_activity()
+
 
 async def log_activity():
     if tracker._logging:
         return
-    
+
     tracker._logging = True
     keystroke_count, click_count = tracker.get_counts()
-    
+
     try:
-        ratio = round(keystroke_count/click_count, 2)
+        ratio = round(keystroke_count / click_count, 2)
     except ZeroDivisionError:
         ratio = 0.00
 
-    await db.set_log(keystroke_count, click_count, ratio)
+    with open("cache.txt", "r") as file:
+        lines = file.readlines()
+        last_log_date = lines[-1].split(",")[0]
+
+    if last_log_date != today:
+        # inserting the log data into the database
+        await db.connect()
+        await db.set_log(keystroke_count, click_count, ratio)
+
+        # resetting the counts
+        tracker.reset_counts()
+
+    # updating the cache file with the latest counts
+    with open(cache_file, "w") as file:
+        file.write(f"{today},{keystroke_count},{click_count},{ratio}")
 
     tracker._logging = False
 

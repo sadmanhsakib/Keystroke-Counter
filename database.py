@@ -1,8 +1,5 @@
-import os
-import asyncpg, dotenv
-
-dotenv.load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
+import asyncpg
+import config
 
 class Database:
     def __init__(self):
@@ -11,7 +8,7 @@ class Database:
     async def connect(self):
         try:
             # since we have no Authentication, we can just use the URL
-            self.pool = await asyncpg.create_pool(DATABASE_URL, ssl=True, min_size=1, max_size=15)
+            self.pool = await asyncpg.create_pool(config.DATABASE_URL, ssl=True)
 
             # gets the database connection from pool
             async with self.pool.acquire() as conn:
@@ -56,12 +53,6 @@ class Database:
                     INSERT INTO LOG (keystroke_count, click_count, ratio)
                     -- $1, $2 & $3 are asyncpg placeholders
                     VALUES ($1, $2, $3)
-                    -- conflict occurs when the variable_name already exists
-                    -- if the variable_name already exists, it updates the variable_value
-                    ON CONFLICT (date) DO UPDATE
-                    SET keystroke_count = $1,
-                    click_count = $2,
-                    ratio = $3
                 """,
                 str(keystroke_count),
                 str(click_count),
@@ -71,21 +62,5 @@ class Database:
         except Exception as error:
             print(f"❌ Error setting/updating TABLE: {error}")
             
-    async def get_last_log(self):
-        try:
-            # gets the database connection from pool
-            async with self.pool.acquire() as conn:
-                result = await conn.fetchrow("""
-                    -- gets the last log from the table
-                    SELECT *
-                    FROM LOG
-                    ORDER BY date DESC
-                    LIMIT 1
-                """)
-                # returning the last log
-                return result if result else None
-        except Exception as error:
-            print(f"Error at fetching last log: {error}")
-            return None
 
 db = Database()
