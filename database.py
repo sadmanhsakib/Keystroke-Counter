@@ -43,17 +43,18 @@ class Database:
         except Exception as error:
             print(f"❌ Error creating tables: {error}")
 
-    async def set_log(self, keystroke_count: str, click_count: str, ratio: str):
+    async def set_log(self, date: str, keystroke_count: str, click_count: str, ratio: str):
         try:
             # gets the database connection from pool
             async with self.pool.acquire() as conn:
                 # inserting/updating LOG-DATA
                 await conn.execute("""
                     -- inserts a new line in the table
-                    INSERT INTO LOG (keystroke_count, click_count, ratio)
-                    -- $1, $2 & $3 are asyncpg placeholders
-                    VALUES ($1, $2, $3)
+                    INSERT INTO LOG (date, keystroke_count, click_count, ratio)
+                    -- $1, $2, $3 & $4 are asyncpg placeholders
+                    VALUES ($1, $2, $3, $4)
                 """,
+                str(date),
                 str(keystroke_count),
                 str(click_count),
                 str(ratio)

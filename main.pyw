@@ -117,7 +117,7 @@ async def log_activity():
     if last_log_date != today:
         # inserting the log data into the database
         await db.connect()
-        await db.set_log(keystroke_count, click_count, ratio)
+        await db.set_log(today, keystroke_count, click_count, ratio)
 
         # resetting the counts
         tracker.reset_counts()
