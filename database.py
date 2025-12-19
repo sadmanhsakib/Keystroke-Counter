@@ -1,5 +1,6 @@
 import asyncpg
 import config
+import datetime
 
 class Database:
     def __init__(self):
@@ -54,7 +55,7 @@ class Database:
                     -- $1, $2, $3 & $4 are asyncpg placeholders
                     VALUES ($1, $2, $3, $4)
                 """,
-                str(date),
+                datetime.datetime.strptime(date, "%Y-%m-%d").date(),
                 str(keystroke_count),
                 str(click_count),
                 str(ratio)

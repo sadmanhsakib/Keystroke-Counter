@@ -111,8 +111,8 @@ async def log_activity():
         ratio = 0.00
 
     with open("cache.txt", "r") as file:
-        lines = file.readlines()
-        last_log_date = lines[-1].split(",")[0]
+        line = file.readline()
+        last_log_date = line.split(",")[0]
 
     if last_log_date != today:
         # inserting the log data into the database
