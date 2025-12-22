@@ -44,7 +44,7 @@ class Database:
         except Exception as error:
             print(f"❌ Error creating tables: {error}")
 
-    async def set_log(self, date: str, keystroke_count: str, click_count: str, ratio: str):
+    async def new_log(self, date: str, keystroke_count: str, click_count: str, ratio: str):
         try:
             # gets the database connection from pool
             async with self.pool.acquire() as conn:

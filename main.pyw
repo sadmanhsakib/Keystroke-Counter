@@ -48,8 +48,8 @@ tracker = ActiveListener()
 async def main():
     # getting the last data from the cache file
     with open(cache_file, "r") as file:
-        lines = file.readlines()
-        parts = lines[-1].split(",")
+        line = file.readline()
+        parts = line.split(",")
 
         tracker.keystroke_count = int(parts[1])
         tracker.click_count = int(parts[2])
@@ -93,8 +93,8 @@ def on_click(x, y, button, pressed):
 # runs the log function periodically
 async def periodic_log():
     while True:
-        # log_activity() function is called every 10 seconds
-        await asyncio.sleep(2)
+        # log_activity() function is called every 5 seconds
+        await asyncio.sleep(5)
         await log_activity()
 
 
@@ -117,7 +117,7 @@ async def log_activity():
     if last_log_date != today:
         # inserting the log data into the database
         await db.connect()
-        await db.set_log(today, keystroke_count, click_count, ratio)
+        await db.new_log(last_log_date, keystroke_count, click_count, ratio)
 
         # resetting the counts
         tracker.reset_counts()
