@@ -46,7 +46,7 @@ To have this run automatically when you turn on your computer:
 For a more reliable startup experience than the Startup folder:
 1.  Press `Win + R`, type `taskschd.msc`, and press Enter.
 2.  In the right pane, click **Create Basic Task...**.
-3.  **Name**: "LaunchMate" (or your preferred name). Click Next.
+3.  **Name**: "KeyMouseStats" (or your preferred name). Click Next.
 4.  **Trigger**: Select **When I log on**. Click Next.
 5.  **Action**: Select **Start a program**. Click Next.
 6.  **Program/script**: Browse and select your `pythonw.exe` (usually in your Python installation folder) or simply select the `main.pyw` file if `.pyw` is associated with Python correctly.
@@ -58,16 +58,16 @@ Add the script to your **Login Items** in System Settings or use `automator` to 
 
 #### **Linux**
 You can use the `autostart` directory.
-1.  Create a `.desktop` file in `~/.config/autostart/` (e.g., `launchmate.desktop`).
+1.  Create a `.desktop` file in `~/.config/autostart/` (e.g., `KeyMouseStats.desktop`).
 2.  Add the following content (adjust paths as needed):
     ```ini
     [Desktop Entry]
     Type=Application
-    Exec=/usr/bin/python3 /path/to/your/LaunchMate/main.pyw
+    Exec=/usr/bin/python3 /path/to/your/KeyMouseStats/main.pyw
     Hidden=false
     NoDisplay=false
     X-GNOME-Autostart-enabled=true
-    Name=LaunchMate
+    Name=KeyMouseStats
     Comment=Start daily routine
     ```
 
