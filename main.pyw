@@ -3,13 +3,11 @@ from database import db
 import config
 import datetime, os
 import threading
-import asyncio, pytz
+import asyncio
 
 cache_file = "cache.txt"
 
-# getting the date minding the timezone
-timezone = pytz.timezone(config.TIMEZONE)
-today = datetime.datetime.now(timezone).strftime("%Y-%m-%d")
+today = datetime.datetime.now().strftime("%Y-%m-%d")
 
 # creating the cache file if it doesn't exist
 if not os.path.exists(cache_file):

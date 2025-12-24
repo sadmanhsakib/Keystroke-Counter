@@ -1,11 +1,85 @@
-# Keystroke-Counter
-This is a single Python script that reads the total number of keys and buttons pressed on the keyboard and mouse. It constantly reads user input and stores the number of buttons and keys pressed by the user. The script writes (creates, if the log.csv does not exist) data on a log.csv file.
+# KeyMouseStats
 
-<h3>How does it work?</h3>
-At first, the script looks for a "log.csv" in its local directory. If there is no "log.csv" file, then it automatically creates one. After that, it keeps on reading user input and stores the data in the log.csv file. Another important thing is that the script doesn't store any data about the keys that were actually pressed or the buttons on the mouse that were actually pressed.
+**KeyMouseStats** is a lightweight, background utility designed to track and log your daily keystrokes and mouse clicks. Built with performance and resilience in mind, it silently monitors input activity and persists daily statistics to a PostgreSQL database for long-term analysis.
 
-<h3>How to use?</h3>
-0. Download & Install the pynput module with the help of the terminal using this command: "pip install pynput"<br> 
-1. Clone the GitHub repository.<br>
-2. Open the Task Scheduler. (If you are not using Windows, please follow the instructions for your operating system.)<br>
-4. Create a new task for the script. (Trigger can be whatever the user wants. Personally, I set the trigger to "At log on".)<br>
+## 🚀 Key Features
+
+*   **Resilient Tracking:** Uses a local cache (`cache.txt`) to ensure data is never lost, even if the script crashes or the system restarts unexpectedly.
+*   **Non-Blocking Performance:** Leverages Python's `threading` for input listeners and `asyncio` for database operations, ensuring zero impact on system performance.
+*   **Daily Analytics:** Automatically aggregates and logs daily totals (Keystrokes, Clicks, and Ratio) to a PostgreSQL database.
+*   **Background Operation:** Designed to run invisibly in the background.
+
+## 💡 Real-World Use Cases
+
+*   **Productivity Insights:** Correlate input volume with daily tasks to understand your peak productivity hours.
+*   **Ergonomic Health:** Monitor usage intensity to help prevent Repetitive Strain Injury (RSI) by identifying days with excessive strain.
+*   **Usage Statistics:** Satisfy curiosity about your daily interaction with your computer (e.g., for gamers or developers).
+
+## 🛠️ Installation & Setup
+
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/sadmanhsakib/KeyMouseStats.git
+    cd KeyMouseStats
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Configure Environment**
+    Create a `.env` file in the root directory:
+    ```env
+    DATABASE_URL=postgresql://user:password@localhost/dbname
+    ```
+
+4.  **Database Setup**
+    Ensure you have a PostgreSQL database running. The script will automatically create the necessary schema and tables on the first run.
+
+## 🏃 Usage
+
+### Automatic Run (Startup)
+To have this run automatically when you turn on your computer:
+
+#### **Windows (Task Scheduler)**
+For a more reliable startup experience than the Startup folder:
+1.  Press `Win + R`, type `taskschd.msc`, and press Enter.
+2.  In the right pane, click **Create Basic Task...**.
+3.  **Name**: "LaunchMate" (or your preferred name). Click Next.
+4.  **Trigger**: Select **When I log on**. Click Next.
+5.  **Action**: Select **Start a program**. Click Next.
+6.  **Program/script**: Browse and select your `pythonw.exe` (usually in your Python installation folder) or simply select the `main.pyw` file if `.pyw` is associated with Python correctly.
+    *   *Tip*: To be safe, point to `pythonw.exe` and put the full path to `main.pyw` in the **Add arguments** box.
+7.  Click **Finish**.
+
+#### **macOS**
+Add the script to your **Login Items** in System Settings or use `automator` to create an application that runs the script.
+
+#### **Linux**
+You can use the `autostart` directory.
+1.  Create a `.desktop` file in `~/.config/autostart/` (e.g., `launchmate.desktop`).
+2.  Add the following content (adjust paths as needed):
+    ```ini
+    [Desktop Entry]
+    Type=Application
+    Exec=/usr/bin/python3 /path/to/your/LaunchMate/main.pyw
+    Hidden=false
+    NoDisplay=false
+    X-GNOME-Autostart-enabled=true
+    Name=LaunchMate
+    Comment=Start daily routine
+    ```
+
+## 📂 Project Structure
+
+*   `main.pyw`: Core logic, initializes listeners and handles the main event loop.
+*   `database.py`: Handles asynchronous PostgreSQL connections and table management.
+*   `config.py`: Manages environment variables and configuration.
+*   `cache.txt`: Local temporary storage for current day's stats.
+
+## 🤝 Contributing
+
+This project is solely developed and maintained by **[Sadman Sakib](https://github.com/sadmanhsakib)**.
+
+If you have suggestions or find bugs, please feel free to open an issue or submit a Pull Request.
