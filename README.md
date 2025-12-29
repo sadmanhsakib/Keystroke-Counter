@@ -1,3 +1,6 @@
+> **⚠️ ARCHIVED PROJECT**  
+> This project is archived and now part of my [Automation-Toolbox](https://github.com/sadmanhsakib/Automation-Toolbox) repository.
+
 # KeyMouseStats
 
 **KeyMouseStats** is a lightweight, background utility designed to track and log your daily keystrokes and mouse clicks. Built with performance and resilience in mind, it silently monitors input activity and persists daily statistics to a PostgreSQL database for long-term analysis.
@@ -81,5 +84,3 @@ You can use the `autostart` directory.
 ## 🤝 Contributing
 
 This project is solely developed and maintained by **[Sadman Sakib](https://github.com/sadmanhsakib)**.
-
-If you have suggestions or find bugs, please feel free to open an issue or submit a Pull Request.
