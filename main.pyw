@@ -1,6 +1,5 @@
 from pynput import keyboard, mouse
 from database import db
-import config
 import datetime, os
 import threading
 import asyncio

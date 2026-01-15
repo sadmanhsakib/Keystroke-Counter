@@ -1,6 +1,10 @@
-import asyncpg
-import config
-import datetime
+import os, datetime 
+import asyncpg, dotenv
+
+# loading the .env file
+dotenv.load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 class Database:
     def __init__(self):
@@ -9,7 +13,7 @@ class Database:
     async def connect(self):
         try:
             # since we have no Authentication, we can just use the URL
-            self.pool = await asyncpg.create_pool(config.DATABASE_URL, ssl=True)
+            self.pool = await asyncpg.create_pool(DATABASE_URL, ssl=True)
 
             # gets the database connection from pool
             async with self.pool.acquire() as conn:
@@ -63,6 +67,6 @@ class Database:
                 print("✅ TABLE set successfully!")
         except Exception as error:
             print(f"❌ Error setting/updating TABLE: {error}")
-            
+
 
 db = Database()
