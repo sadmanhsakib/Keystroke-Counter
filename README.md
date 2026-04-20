@@ -1,9 +1,9 @@
 > **⚠️ ARCHIVED PROJECT**  
 > This project is archived and now part of my [Automation-Toolbox](https://github.com/sadmanhsakib/Automation-Toolbox) repository.
 
-# KeyMouseStats
+# input-tracker
 
-**KeyMouseStats** is a lightweight, background utility designed to track and log your daily keystrokes and mouse clicks. Built with performance and resilience in mind, it silently monitors input activity and persists daily statistics to a PostgreSQL database for long-term analysis.
+**input-tracker** is a lightweight, background utility designed to track and log your daily keystrokes and mouse clicks. Built with performance and resilience in mind, it silently monitors input activity and persists daily statistics to a PostgreSQL database for long-term analysis.
 
 ## 🚀 Key Features
 
@@ -22,8 +22,8 @@
 
 1.  **Clone the Repository**
     ```bash
-    git clone https://github.com/sadmanhsakib/KeyMouseStats.git
-    cd KeyMouseStats
+    git clone https://github.com/sadmanhsakib/input-tracker.git
+    cd input-tracker
     ```
 
 2.  **Install Dependencies**
@@ -49,7 +49,7 @@ To have this run automatically when you turn on your computer:
 For a more reliable startup experience than the Startup folder:
 1.  Press `Win + R`, type `taskschd.msc`, and press Enter.
 2.  In the right pane, click **Create Basic Task...**.
-3.  **Name**: "KeyMouseStats" (or your preferred name). Click Next.
+3.  **Name**: "input-tracker" (or your preferred name). Click Next.
 4.  **Trigger**: Select **When I log on**. Click Next.
 5.  **Action**: Select **Start a program**. Click Next.
 6.  **Program/script**: Browse and select your `pythonw.exe` (usually in your Python installation folder) or simply select the `main.pyw` file if `.pyw` is associated with Python correctly.
@@ -61,16 +61,16 @@ Add the script to your **Login Items** in System Settings or use `automator` to 
 
 #### **Linux**
 You can use the `autostart` directory.
-1.  Create a `.desktop` file in `~/.config/autostart/` (e.g., `KeyMouseStats.desktop`).
+1.  Create a `.desktop` file in `~/.config/autostart/` (e.g., `input-tracker.desktop`).
 2.  Add the following content (adjust paths as needed):
     ```ini
     [Desktop Entry]
     Type=Application
-    Exec=/usr/bin/python3 /path/to/your/KeyMouseStats/main.pyw
+    Exec=/usr/bin/python3 /path/to/your/input-tracker/main.pyw
     Hidden=false
     NoDisplay=false
     X-GNOME-Autostart-enabled=true
-    Name=KeyMouseStats
+    Name=input-tracker
     Comment=Start daily routine
     ```
 
